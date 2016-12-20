@@ -1,0 +1,29 @@
+{
+    "name": "pm2-papertrail",
+    "version": "0.0.1",
+    "description": "Forward logs to papertrail",
+    "main": "app.js",
+    "dependencies": {
+        "pm2": "^2.0.18",
+        "pmx": "^0.6.8",
+        "winston": "^2.3.0"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/haremo/pm2-papertrial.git"
+    },
+    "config": {
+        "host": "",
+        "port": ""
+    },
+    "apps": [{
+        "merge_logs": true,
+        "max_memory_restart": "200M",
+        "script": "app.js"
+    }],
+    "author": "HAREMO IT Solutions GmbH",
+    "license": "MIT",
+    "devDependencies": {
+        "eslint": "^3.12.2"
+    }
+}
