@@ -19,19 +19,18 @@ pmx.initModule({
         }
     }
 }, function(err, conf) {
-    console.log('PAPERTRAIL', conf.port, conf.host);
+
     var loggerObj = {};
     var log = function(level, name, message, packet) {
         if (name === 'pm2-papertrail') {
             return;
         }
-        console.log(level, name, message, packet);
         if (!loggerObj[name]) {
-            console.log('createLogger', name);
             loggerObj[name] = createLogger(name);
         }
         loggerObj[name][level](message);
     };
+
     var createLogger = function(program) {
         return new (winston.Logger)({
             transports: [
@@ -50,7 +49,7 @@ pmx.initModule({
         console.log('info', 'PM2: forwarding to papertrail');
         pm2.launchBus(function(err, bus) {
             bus.on('log:PM2', function(packet) {
-                log('info', 'PM2', packet.data, packet);
+                //log('info', 'PM2', packet.data, packet);
             });
             bus.on('log:out', function(packet) {
                 log('info', packet.process.name, packet.data, packet);
