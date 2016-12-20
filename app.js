@@ -19,30 +19,44 @@ pmx.initModule({
         }
     }
 }, function(err, conf) {
-    var logger = new (winston.Logger)({
-        transports: [
-            new (winston.transports.Papertrail)({
-                port: conf.port,
-                ssl_enable: true,
-                host: conf.host,
-                max_connect_retries: -1,
-                node_name: 'pm2 output',
-            })
-        ]
-    });
+    console.log('PAPERTRAIL', conf.port, conf.host);
+    var loggerObj = {};
+    var log = function(level, name, message, packet) {
+        if (name === 'pm2-papertrail') {
+            return;
+        }
+        console.log(level, name, message, packet);
+        if (!loggerObj[name]) {
+            console.log('createLogger', name);
+            loggerObj[name] = createLogger(name);
+        }
+        loggerObj[name][level](message);
+    };
+    var createLogger = function(program) {
+        return new (winston.Logger)({
+            transports: [
+                new (winston.transports.Papertrail)({
+                    port: conf.port,
+                    host: conf.host,
+                    program: program,
+                    colorize: true,
+                    level: 'info'
+                })
+            ]
+        });
+    };
 
     pm2.connect(function() {
-        logger.log('info', 'PM2: forwarding to papertrail');
         console.log('info', 'PM2: forwarding to papertrail');
         pm2.launchBus(function(err, bus) {
             bus.on('log:PM2', function(packet) {
-                logger.log('PM2: ' + packet.data);
+                log('info', 'PM2', packet.data, packet);
             });
             bus.on('log:out', function(packet) {
-                logger.log(packet.data, {app: packet.process.name});
+                log('info', packet.process.name, packet.data, packet);
             });
             bus.on('log:err', function(packet) {
-                logger.error(packet.data, {app: packet.process.name});
+                log('error', packet.process.name, packet.data, packet);
             });
         });
     });
