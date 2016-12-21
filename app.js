@@ -22,7 +22,8 @@ pmx.initModule({
 
     var loggerObj = {};
     var log = function(level, name, message, packet) {
-        if (name === 'pm2-papertrail') {
+        name = name.trim();
+        if (name === 'pm2-papertrail' || name === 'pm2-auto-pull') {
             return;
         }
         if (!loggerObj[name]) {
