@@ -1,6 +1,6 @@
 {
     "name": "pm2-papertrail",
-    "version": "0.0.5",
+    "version": "1.0.0",
     "description": "Forward logs to papertrail",
     "main": "app.js",
     "dependencies": {
