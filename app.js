@@ -38,7 +38,7 @@ pmx.initModule({
                 new (winston.transports.Papertrail)({
                     port: conf.port,
                     host: conf.host,
-                    hostname: `${conf.name}_${process.env.NODE_ENV}_${os.hostname()}`,
+                    hostname: `${conf.hostname}_${process.env.NODE_ENV}_${os.hostname()}`,
                     program: program,
                     colorize: true,
                     level: 'info'

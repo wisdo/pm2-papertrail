@@ -1,6 +1,6 @@
 {
-    "name": "pm2-papertrail",
-    "version": "1.0.0",
+    "name": "@wisdo/pm2-papertrail",
+    "version": "1.0.2",
     "description": "Forward logs to papertrail",
     "main": "app.js",
     "dependencies": {
@@ -11,21 +11,21 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/haremo/pm2-papertrail.git"
+        "url": "git+https://github.com/wisdo/pm2-papertrail.git"
     },
     "config": {
         "host": "",
         "port": "",
-        "name": ""
+        "hostname": ""
     },
     "apps": [{
         "merge_logs": true,
         "max_memory_restart": "200M",
         "script": "app.js"
     }],
-    "author": "HAREMO IT Solutions GmbH",
+    "author": "Wisdo",
     "license": "MIT",
-    "devDependencies": {
-        "eslint": "^3.12.2"
+    "scripts": {
+        "publish": "npm publish --access public"
     }
 }
