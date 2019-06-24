@@ -15,7 +15,8 @@
     },
     "config": {
         "host": "",
-        "port": ""
+        "port": "",
+        "name": ""
     },
     "apps": [{
         "merge_logs": true,

@@ -1,8 +1,9 @@
 'use strict';
-var winston = require('winston');
+const winston = require('winston');
 require('winston-papertrail').Papertrail;
-var pm2 = require('pm2');
-var pmx = require('pmx');
+const pm2 = require('pm2');
+const pmx = require('pmx');
+const os = require("os");
 
 pmx.initModule({
     widget: {
@@ -18,10 +19,9 @@ pmx.initModule({
             meta: false,
         }
     }
-}, function(err, conf) {
-
-    var loggerObj = {};
-    var log = function(level, name, message, packet) {
+}, function (err, conf) {
+    const loggerObj = {};
+    const log = function (level, name, message, packet) {
         name = name.trim();
         if (name === 'pm2-papertrail' || name === 'pm2-auto-pull') {
             return;
@@ -32,12 +32,13 @@ pmx.initModule({
         loggerObj[name][level](message);
     };
 
-    var createLogger = function(program) {
+    const createLogger = function (program) {
         return new (winston.Logger)({
             transports: [
                 new (winston.transports.Papertrail)({
                     port: conf.port,
                     host: conf.host,
+                    hostname: `${conf.name}_${process.env.NODE_ENV}_${os.hostname()}`,
                     program: program,
                     colorize: true,
                     level: 'info'
@@ -46,16 +47,13 @@ pmx.initModule({
         });
     };
 
-    pm2.connect(function() {
+    pm2.connect(function () {
         console.log('info', 'PM2: forwarding to papertrail');
-        pm2.launchBus(function(err, bus) {
-            bus.on('log:PM2', function(packet) {
-                //log('info', 'PM2', packet.data, packet);
-            });
-            bus.on('log:out', function(packet) {
+        pm2.launchBus(function (err, bus) {
+            bus.on('log:out', function (packet) {
                 log('info', packet.process.name, packet.data, packet);
             });
-            bus.on('log:err', function(packet) {
+            bus.on('log:err', function (packet) {
                 log('error', packet.process.name, packet.data, packet);
             });
         });
